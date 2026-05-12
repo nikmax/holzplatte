@@ -1,5 +1,4 @@
-// Version V4.30
-
+version = "V4.30"
 if(!document.getElementById('convertTool')){
 div = document.createElement('div');
 div.id = 'convertTool';
@@ -7,7 +6,7 @@ div.style.zIndex=100;
 div.style.position='absolute';
 div.style.top=0;
 div.style.left=0;
-div.innerHTML='<button style="padding:10px; border-radius:10px;" onclick=getHZ()>(V4.30) Konvertiere</button><div id="convertInfo"></div>';
+div.innerHTML='<button style="padding:10px; border-radius:10px;" onclick=getHZ()>('+version+') Konvertiere</button><div id="convertInfo"></div>';
 document.body.appendChild(div);
 }
 
