@@ -1,4 +1,4 @@
-version = '4.11';
+// Version V4.30
 
 if(!document.getElementById('convertTool')){
 div = document.createElement('div');
@@ -7,20 +7,14 @@ div.style.zIndex=100;
 div.style.position='absolute';
 div.style.top=0;
 div.style.left=0;
-div.innerHTML='<button style="padding:10px; border-radius:10px;" onclick=getHZ()>(V'+version+') Konvertiere</button><div id="convertInfo"></div>';
+div.innerHTML='<button style="padding:10px; border-radius:10px;" onclick=getHZ()>(V4.30) Konvertiere</button><div id="convertInfo"></div>';
 document.body.appendChild(div);
 }
 
 function getHZ (){
 
-n=0;
-panels=[...document.getElementsByClassName('orders-panel')];
-panels.forEach((e)=>{if(e.style.display != 'none') {i=e;n++;} });
-if(n==0) {alert('bitte zuerst Bestellung auswählen');return;}
-n=0;
-orders=[...i.getElementsByClassName('x-form-item-label-top')];
-orders.forEach((e)=>{if(e.innerText == 'Menge:') {i=e.id.match(/\d+/)[0]*1;n++;}});
-if(n == 0) {alert('bitte zuerst Artikel auswählen');return;}
+i = getIndex();
+if(i == 0) return;
 
 t = document.getElementById("textfield-"+(i+36)+"-inputEl").value.match(/[ßüÜäÄöÖa-zA-Z\s\-]+/)[0];
 o = document.getElementById("textareafield-"+(i+37)+"-inputEl");
@@ -52,7 +46,7 @@ r += getUmleimer(o);
 p = getOption(o,'Form',' ');
 if(p != ''){
 if (p == ' + Rechteck') ;
-else if (p == ' +  Rechteck') ;
+else if (p == ' + Rechteck') ;
 else if (p == ' + 2 Eckenrundungen') r += ' + 2xER'
 else if (p == ' + 4 Eckenrundungen') r += ' + 4xER'
 else if (p == ' + 2 Schräge Ecken') r += ' + 2xSchräge'
@@ -77,22 +71,22 @@ r += getOption(o,'Ausschnitte','Ausschnitt',2);
 document.getElementById("textfield-"+(i+2)+"-inputEl").value=r;
 
 
-setCombobox(i+4,'Aufgenommen');
 if(t.includes("Muster")){
-setCombobox(i+24,'Muster');
-setCombobox(i+26,'Muster Holz');
 setNumberField(i+31,5); // LZ
 setNumberField(i+12,0); // qm
 setNumberField(i+10,'0,07'); // Gewicht
+setCombobox(i+24,'Muster');
+setCombobox(i+26,'Muster Holz');
 } else {
-setCombobox(i+24,'Holzzuschnitt');
-setCombobox(i+26,'Holz Zuschnitt');
 setNumberField(i+31,14); // LZ
 x = b*l/10000; x += ''; x = x.replaceAll('.',',');
 setNumberField(i+12,x); // qm
 x = b*l/10000*s*0.69 ; x += ''; x = x.replaceAll('.',',');
 setNumberField(i+10,x); // Gewicht
+setCombobox(i+24,'Holzzuschnitt');
+setCombobox(i+26,'Holz Zuschnitt');
 }
+setCombobox(i+4,'Aufgenommen');
 
 //}
 }
@@ -129,17 +123,28 @@ return r;
 }
 function setNumberField(i,val){
 document.getElementById("numberfield-"+i+"-inputEl").value = val;}
+
 function setCombobox(id,value){
-x=document.getElementById('combobox-'+id+'-inputEl').click();
+l=document.getElementById('combobox-'+id+'-inputEl');
+if (!l) {l=document.getElementById('shared-form-field-filteredcombobox-'+id+'-inputEl');}
+if(!l){console.log('liste "combobox-'+id+'-inputEl" nicht gefunden');return;}
+l.click();
+
 x=[...document.getElementsByClassName('x-boundlist')];
 x.forEach((e)=>{if(e.style.display != 'none') y=e});
+
 if(!y){
-x=document.getElementById('combobox-'+id+'-inputEl').click();
+l.click();
 x=[...document.getElementsByClassName('x-boundlist')];
 x.forEach((e)=>{if(e.style.display != 'none') y=e});
 }
+if(!y){console.log('liste "x-boundlist" nicht gefunden oder nicht angeklickt');return;}
 x = [...y.getElementsByClassName('x-boundlist-item')]
 x.forEach((e)=>{if(e.textContent == value) e.click() })}
+
+
+
+
 function getOption (o,name,key='',val = 0){
 result = '';
 if(key == '') value = name+': ';
@@ -166,4 +171,23 @@ default: result += ' + ' + value + get[1];
 }
 return result;}
 
-clear()
+function getIndex(){
+panels=[...document.getElementsByClassName('orders-panel')];
+for (const panel of panels) {
+    if (panel.style.display != 'none') {
+        orders=[...panel.getElementsByClassName('x-form-item-label-top')];
+        for (const order of orders) {
+            if (order.innerText === 'Menge:') {
+                i = +order.id.match(/\d+/)[0];
+                return i;
+            }
+        }
+        alert('bitte zuerst Artikel auswählen');
+        return 0;
+    }
+}
+alert('bitte zuerst Bestellung auswählen');
+return 0;
+}
+
+clear();
