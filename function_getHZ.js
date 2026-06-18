@@ -1,4 +1,4 @@
-version = "V4.30"
+version = "V4.30 beta"
 if(!document.getElementById('convertTool')){
     div = document.createElement('div');
     div.id = 'convertTool';
@@ -144,7 +144,8 @@ function setNumberField(i,val){
 function setCombobox(id,value){
     l=document.getElementById('combobox-'+id+'-inputEl');
     if (!l) {l=document.getElementById('shared-form-field-filteredcombobox-'+id+'-inputEl');}
-    if(!l){console.log('liste "combobox-'+id+'-inputEl" nicht gefunden');return;}
+    if (!l) {l=document.getElementById('workplaces-filteredcombobox-'+id+'-inputEl');}
+    if(!l){console.log('Zeile 137 (i = ' +i+'):liste "combobox-'+id+'-inputEl" nicht gefunden');return;}
     l.click();
 
     x=[...document.getElementsByClassName('x-boundlist')];
